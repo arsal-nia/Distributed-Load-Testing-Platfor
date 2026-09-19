@@ -1,0 +1,49 @@
+{
+  "title": "Load Testing Platform",
+  "uid": "loadtest-main",
+  "schemaVersion": 39,
+  "refresh": "5s",
+  "time": { "from": "now-15m", "to": "now" },
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Jobs Created",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "targets": [{ "expr": "loadtest_jobs_created_total", "refId": "A" }]
+    },
+    {
+      "type": "stat",
+      "title": "Jobs Completed",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "targets": [{ "expr": "loadtest_jobs_completed_total", "refId": "A" }]
+    },
+    {
+      "type": "stat",
+      "title": "Active Jobs",
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "targets": [{ "expr": "loadtest_active_jobs", "refId": "A" }]
+    },
+    {
+      "type": "stat",
+      "title": "Total Requests Sent",
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+      "targets": [{ "expr": "sum(loadtest_worker_requests_total)", "refId": "A" }]
+    },
+    {
+      "type": "timeseries",
+      "title": "Requests per Worker (rate)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "targets": [{ "expr": "rate(loadtest_worker_requests_total[1m])", "legendFormat": "{{instance}}", "refId": "A" }]
+    },
+    {
+      "type": "timeseries",
+      "title": "P95 Latency (ms)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "targets": [{
+        "expr": "histogram_quantile(0.95, sum(rate(loadtest_worker_request_latency_seconds_bucket[1m])) by (le)) * 1000",
+        "legendFormat": "P95",
+        "refId": "A"
+      }]
+    }
+  ]
+}
